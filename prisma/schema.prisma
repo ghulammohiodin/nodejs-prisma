@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// schema.prisma 
+
+model User {
+  id        Int      @default(autoincrement()) @id
+  email     String   @unique // unique String with required 
+  first_name      String? // optional String 
+  last_name      String? // optional String
+  password  String // required String
+  bookmarks BookMark[] // one to many relationship
+  createdAt DateTime @default(now()) // default value
+  updatedAt DateTime @updatedAt // auto update
+
+  @@map("users")
+}
+
+
+model BookMark {
+  id        Int      @default(autoincrement()) @id
+  url       String  @unique // unique String with required 
+  title     String // required String 
+  description String? // optional String
+  user      User     @relation(fields: [user_id], references: [id] , onUpdate:Cascade) // one to many relationship
+  user_id    Int // required Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bookmarks")
+}
